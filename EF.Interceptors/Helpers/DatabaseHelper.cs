@@ -1,5 +1,6 @@
 using EF.Interceptors.Data;
 using EF.Interceptors.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EF.Interceptors.Helpers
 {
@@ -17,22 +18,24 @@ namespace EF.Interceptors.Helpers
             using var context = new ApplicationDbContext();
             context.Books.AddRange(new List<Book>() {
                 new (){
-                    Name = "he Half Known Life",
-                    Author = " Emma Cline"
+                    Title = "he Half Known Life",
+                    Author = new(){Name = "Emma Cline"}
                 },
                 new (){
-                    Name = "The Future",
-                    Author = "Naomi Alderman"
+                    Title = "The Future",
+                    Author = new(){ Name = "Naomi Alderman" }
                 },
                 new() {
-                    Name = "Monsters",
-                    Author = "Claire Dederer"
+                    Title = "Monsters",
+                    Author = new() { Name = "Claire Dederer" }
                 },
                 new() {
-                    Name = "Blackouts",
-                    Author = "Justin Torres"
+                    Title = "Blackouts",
+                    Author = new() { Name = "Justin Torres" }
                 }
             });
+
+            context.SaveChanges();
         }
 
         public static void ShowBooks()
@@ -41,8 +44,8 @@ namespace EF.Interceptors.Helpers
             Console.WriteLine("-------------");
 
             using var context = new ApplicationDbContext();
-            foreach (var book in context.Books)
-                Console.WriteLine($"Id: {book.Id}, Title: {book.Name},  Author: {book.Author}");
+            foreach (var book in context.Books.Include(x => x.Author))
+                Console.WriteLine($"Id: {book.Id}, Title: {book.Title},  Author: {book.Author.Name}, IsDeleted: {book.IsDeleted}");
         }
     }
 }

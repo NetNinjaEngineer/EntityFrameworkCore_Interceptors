@@ -1,4 +1,5 @@
-﻿using EF.Interceptors.Entities;
+﻿using EF.Interceptors.Data.Interceptors;
+using EF.Interceptors.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -34,7 +35,8 @@ namespace EF.Interceptors.Data
 
             var constr = configuration.GetSection("constr").Value;
 
-            optionsBuilder.UseNpgsql(constr);
+            optionsBuilder.UseNpgsql(constr)
+                .AddInterceptors(new SoftDeleteInterceptor());
 
         }
 

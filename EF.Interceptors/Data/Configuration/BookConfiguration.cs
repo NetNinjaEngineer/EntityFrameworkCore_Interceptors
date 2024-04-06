@@ -17,6 +17,10 @@ namespace EF.Interceptors.Data.Configuration
             builder.Property(x => x.Price)
                 .HasPrecision(18, 2).IsRequired();
 
+            builder.Property(x => x.IsDeleted).IsRequired();
+
+            builder.HasQueryFilter(x => x.IsDeleted == false);
+
             builder.ToTable("Books");
         }
     }
